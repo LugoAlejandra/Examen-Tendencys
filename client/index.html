@@ -9,11 +9,16 @@
             <button id="create_shipment">Create Shipment</button>
             <p> Shipments Created: </p>
             <p id="counter">0</p>
+            <p> Shipments Rejected: </p>
+            <p id="rejected">0</p>
             <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
             <script>
                 const socket = io('http://localhost:3000');
+
                 const createShipmentButton = document.getElementById('create_shipment');
                 const counter = document.getElementById('counter');
+                const rejected = document.getElementById('rejected');
+
                 createShipmentButton.addEventListener('click', () => {
                     fetch('/shipments/generate', { method: 'POST'})
                     .then(response => {
@@ -21,10 +26,15 @@
                             console.log('Shipment created');
                         }
                     })
-                    .catch(err => { console.log(err)});
-                    socket.on('shipment_created', (counter) => {
-                    counter.textContent = counter;
+                    .catch(err => { console.error(err)});
                 });
+
+                socket.on('shipment_created', () => {
+                    counter.textContent = parseInt(counter.textContent) + 1;
+                });
+
+                socket.on('shipment_rejected', () => {
+                    rejected.textContent = parseInt(rejected.textContent) + 1;
                 });
             </script>
         </body>

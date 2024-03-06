@@ -9,6 +9,11 @@ class ShipmentsController {
         try {
             const shipment = shipment_body;
             const shipment_created = await services.envia.create(shipment);
+            if(shipment_created.error) {
+                req.app.io.emit('shipment_rejected');
+            } else {
+                req.app.io.emit('shipment_created');
+            }
             res.json({ success: true, shipment: shipment_created });
         } catch (err) {
             next(err);
