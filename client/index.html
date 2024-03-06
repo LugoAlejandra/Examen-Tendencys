@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shipments</title>
+        <body>
+            <h1> Shipments</h1>
+            <button id="create_shipment">Create Shipment</button>
+            <p> Shipments Created: </p>
+            <p id="counter">0</p>
+            <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+            <script>
+                const socket = io('http://localhost:3000');
+                const createShipmentButton = document.getElementById('create_shipment');
+                const counter = document.getElementById('counter');
+                createShipmentButton.addEventListener('click', () => {
+                    fetch('/shipments/generate', { method: 'POST'})
+                    .then(response => {
+                        if(response.ok) {
+                            console.log('Shipment created');
+                        }
+                    })
+                    .catch(err => { console.log(err)});
+                    socket.on('shipment_created', (counter) => {
+                    counter.textContent = counter;
+                });
+                });
+            </script>
+        </body>
+</html>

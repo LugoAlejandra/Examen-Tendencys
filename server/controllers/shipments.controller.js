@@ -9,9 +9,6 @@ class ShipmentsController {
         try {
             const shipment = shipment_body;
             const shipment_created = await services.envia.create(shipment);
-            if(shipment_created) {
-                //Logica para aumentar el contador de shipments en el socket
-            }
             res.json({ success: true, shipment: shipment_created });
         } catch (err) {
             next(err);
